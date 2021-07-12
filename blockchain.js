@@ -2,6 +2,7 @@ const nearApi = require('near-api-js');
 const api = require('./api');
 const fs = require('fs');
 const fetch = require('node-fetch');
+const path = require('path');
 
 const settings = JSON.parse(fs.readFileSync(api.CONFIG_PATH, 'utf8'));
 
@@ -76,13 +77,13 @@ module.exports = {
 
     DeployContract: async function (account_id, private_key, contract_file) {
         try {
-            const path = `contracts/${contract_file}`;
-            if (!fs.existsSync(path))
+            var jsonPath = path.join(__dirname, 'contracts', contract_file);
+            if (!fs.existsSync(jsonPath))
                 return api.reject("Contract not found");
 
             const account = await this.GetAccountByKey(account_id, private_key);
 
-            const data = [...fs.readFileSync(path)];
+            const data = [...fs.readFileSync(jsonPath)];
             const txs = [nearApi.transactions.deployContract(data)];
 
             let res = await account.signAndSendTransaction(account_id, txs);
