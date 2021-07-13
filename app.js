@@ -27,7 +27,12 @@ const init = async () => {
                     constructor: CatboxMemory
                 }
             }
-        ]
+        ],
+        routes: {
+            cors: {
+                origin: ['*'] // an array of origins or 'ignore'           
+            }
+        }
     });
 
     function processRequest(request) {
